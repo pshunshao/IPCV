@@ -1,0 +1,5 @@
+Example:
+https://github.com/subokita/Sandbox/tree/master/TestHough/TestHough
+
+Explaination:
+http://www.keymolen.com/2013/05/hough-transformation-c-implementation.html
