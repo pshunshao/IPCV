@@ -12,7 +12,7 @@
 
 using namespace cv;
 
-void accumulator(int height, int width, Mat original_img);
+void accumulator(int height, int width, Mat& img);
 
 int main() {
   int img_height;
@@ -33,7 +33,7 @@ int main() {
   Mat image_edge;
   Canny(image_grey_blur, image_edge, 80, 150, 3);
 
-  accumulator(img_height, img_width, original_image);
+  accumulator(img_height, img_width, image_edge);
 
   imshow("Display", image_edge);
 
@@ -41,37 +41,57 @@ int main() {
   return 0;
 }
 
-void accumulator(int height, int width, Mat original_img){
-  double accum_height;
-  double accum_width;
+void accumulator(int height, int width, Mat& img){
+  double accum_x;
+  double accum_y;
+  double accum_degree;
+  //image cross distance
   double diagonal_distance;
+
   int depth_of_degree;
+
+  Mat original_img = img.clone();
 
   //This is not the degree of an angle, but rather the segment of degree
   //If this is 45, then the angle for each segment will be 180 / 45
   //In this case it woule be 180 segment, thus 1 degree for each segment
-  depth_of_degree = 180;
+  depth_of_degree = 360;
 
   diagonal_distance = sqrt((height * height) + (width * width));
-  accum_height = diagonal_distance * 2;
-  accum_width = depth_of_degree;
 
-  Mat accum(180, accum_height, CV_64FC1);
+  accum_x = width;
+  accum_y = height;
+  accum_degree = depth_of_degree;
+
+  double accum[width][height][depth_of_degree];
 
   double original_center_x;
   double original_center_y;
 
+//original_img.at<uchar>(1, 1) = 255;
+
   original_center_y = height/2;
   original_center_x = width/2;
 
-  for (int y = 0; y < original_center_y; y++)
+  for (int y = 0; y < height; y++)
   {
-      for(int x = 0; x < original_center_x; x++)
+      for(int x = 0; x < width; x++)
       {
-        if(original_img.at<uchar>(x, y) > 200){
-// r= xcos(theta) + ysin(theta)
-          double distance =
-        }
+    //    if(1){
+          /*
+          for(int radius = 0; radius < min(height, width); radius ++){
+            for(int degree = 0; degree < depth_of_degree; degree ++){
+              // r = xcos + ysin
+              // x0 = x + rcos , y0 = y + rsin
+              double center_x;
+              double center_y;
+              center_x = x + (radius * cos(degree));
+              center_y = y + (radius * sin(degree));
+              accum[(int)center_x][(int)center_y][radius]++;
+            }
+          }
+          */
+    //    }
       }
   }
 }
