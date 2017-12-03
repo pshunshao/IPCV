@@ -19,7 +19,7 @@ int main() {
   int img_width;
 
   Mat original_image;
-  original_image = imread("dart13.jpg", 1);
+  original_image = imread("dart15.jpg", 1);
 
   if(!original_image.data){
     return -1;
@@ -33,7 +33,7 @@ int main() {
   cvtColor(original_image, image_grey, CV_BGR2GRAY);
 
   Mat image_grey_blur;
-  GaussianBlur(image_grey, image_grey_blur, Size(9,9),0 ,0);
+  GaussianBlur(image_grey, image_grey_blur, Size(7,7),0 ,0);
 
 //  Mat image_edge;
 //  Canny(image_grey_blur, image_edge, 80, 150, 3);
@@ -43,8 +43,8 @@ int main() {
 
 
 //  HoughCircles(image_grey_blur, transformed_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/3, 100, 60, 0, min(img_width, img_height));
-  HoughCircles(image_grey_blur, transformed_high_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/10, 180, 40, 50, (min(img_width, img_height) / 2*3));
-  HoughCircles(image_grey_blur, transformed_low_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/10, 40, 30, 0, 300);
+  HoughCircles(image_grey_blur, transformed_high_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/10, 180, 50, 50, (min(img_width, img_height) / 2*3));
+  HoughCircles(image_grey_blur, transformed_low_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/20, 40, 30, 0, (min(img_width, img_height) / 2*3));
 
 
 for( size_t i = 0; i < transformed_high_circle.size(); i++ )
