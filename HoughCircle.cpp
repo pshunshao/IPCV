@@ -7,7 +7,6 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
-#include <stdio.h>
 
 
 using namespace cv;
@@ -19,7 +18,7 @@ int main() {
   int img_width;
 
   Mat original_image;
-  original_image = imread("dart15.jpg", 1);
+  original_image = imread("dart6.jpg", 1);
 
   if(!original_image.data){
     return -1;
@@ -43,19 +42,19 @@ int main() {
 
 
 //  HoughCircles(image_grey_blur, transformed_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/3, 100, 60, 0, min(img_width, img_height));
-  HoughCircles(image_grey_blur, transformed_high_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/10, 180, 50, 50, (min(img_width, img_height) / 2*3));
-  HoughCircles(image_grey_blur, transformed_low_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/20, 40, 30, 0, (min(img_width, img_height) / 2*3));
+  HoughCircles(image_grey_blur, transformed_high_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/10, 180, 60, 50, (min(img_width, img_height) / 2*3));
+  HoughCircles(image_grey_blur, transformed_low_circle, CV_HOUGH_GRADIENT, 1, image_grey_blur.rows/10, 40, 30, 0, (min(img_width, img_height) / 2*3));
 
 
 for( size_t i = 0; i < transformed_high_circle.size(); i++ )
 {
   for (size_t z = 0; z < transformed_low_circle.size(); z++){
     Point center_high(cvRound(transformed_high_circle[i][0]), cvRound(transformed_high_circle[i][1]));
-    Point center_low(cvRound(transformed_low_circle[i][0]), cvRound(transformed_low_circle[i][1]));
-    if(cvRound (sqrt(pow((transformed_high_circle[i][0] - transformed_low_circle[i][0]), 2) + pow((transformed_high_circle[i][1] - transformed_low_circle[i][1]), 2))) < 20)
+    Point center_low(cvRound(transformed_low_circle[z][0]), cvRound(transformed_low_circle[z][1]));
+    if(cvRound (sqrt(pow((transformed_high_circle[i][0] - transformed_low_circle[z][0]), 2) + pow((transformed_high_circle[i][1] - transformed_low_circle[z][1]), 2))) < 20)
     {
       int radius_high = cvRound(transformed_high_circle[i][2]);
-         int radius_low = cvRound(transformed_low_circle[i][2]);
+         int radius_low = cvRound(transformed_low_circle[z][2]);
          // circle center
      circle( original_image, center_high, 3, Scalar(0,255,0), -1, 8, 0 );
           circle( original_image, center_low, 3, Scalar(0,255,0), -1, 8, 0 );
