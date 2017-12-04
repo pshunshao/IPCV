@@ -16,7 +16,7 @@ using namespace cv;
 
 String cascade_name = "cascade.xml";
 CascadeClassifier cascade;
-const int intesect_threshold = 4;
+
 
 
 vector<Vec2f> detectLines(Mat img);
@@ -40,7 +40,7 @@ bool search_hough_line(Mat frame, Rect dartR) {
 		p2.x = lines.size();
 		p2.y = (rho - (p2.x - edges.cols / 2) * cos(theta)) / sin(theta) + edges.rows / 2;
 		//calculate hough space
-		double m = -cos(theta) / sin(theta), c = rho / sin(theta);
+		double m = -cos(theta) / sin(theta);
 		for (int i = 0; i< intersect.cols; i++) {
 			for (int j = 0; j<intersect.rows; j++) {
 				if (j == cvRound(m*i + (rho / sin(theta)))) {
@@ -60,7 +60,7 @@ bool search_hough_line(Mat frame, Rect dartR) {
 		}
 	}
 
-	return max_Intersect > intesect_threshold;
+	return max_Intersect > 4;
 }
 
 void detectAndDisplay(Mat img);
@@ -94,7 +94,11 @@ vector<Vec3f> detectCircle(Mat img) {
 	HoughCircles(frame_gray, circles, CV_HOUGH_GRADIENT, 1, img.rows / 3, 80, 30, 0, 100);
 	for (size_t i = 0; i < circles.size(); i++)
 	{
+		// Point center_high(cvRound(transformed_high_circle[i][0]), cvRound(transformed_high_circle[i][1]));
+		// Point center_low(cvRound(transformed_low_circle[i][0]), cvRound(transformed_low_circle[i][1]));
 		Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+		// if(cvRound (sqrt(pow((transformed_high_circle[i][0] - transformed_low_circle[i][0]), 2) + pow((transformed_high_circle[i][1] - transformed_low_circle[i][1]), 2))) < 50)
+		//
 
 		int radius = cvRound(circles[i][2]);
 		// circle center
@@ -113,6 +117,7 @@ void detectAndDisplay(Mat img) {
 	std::vector<Rect> finalDart;
 	std::vector<Vec3f> finalcircle;
 	std::vector<Vec3f> circles = detectCircle(img);
+	// vector<Vec2f> lines = detectLines(img);
 	cvtColor(img, frame_gray, CV_BGR2GRAY);
 	equalizeHist(frame_gray, frame_gray);
 	cvtColor(img, frame_lines, CV_BGR2GRAY);
@@ -135,9 +140,9 @@ void detectAndDisplay(Mat img) {
 	 	}
 	 }
 	 }
+	 //update dart boards with lines
 	for (int i = 0; i < darts.size(); i++) {
 		if (search_hough_line(frame_lines, darts[i])) {
-			//update dart boards with lines
 			finalDart.push_back(darts[i]);
 		}
 	}
